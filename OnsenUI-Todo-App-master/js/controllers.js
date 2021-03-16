@@ -36,6 +36,7 @@ myApp.controllers = {
 
     // Change splitter animation depending on platform.
     document.querySelector('#mySplitter').left.setAttribute('animation', ons.platform.isAndroid() ? 'overlay' : 'reveal');
+    page.querySelector('[component="button/delall"]').onclick = myApp.services.tasks.removeall();
   },
 
   ////////////////////////////
@@ -49,15 +50,19 @@ myApp.controllers = {
 
         if (newTitle) {
           // If input title is not empty, create a new task.
-          myApp.services.tasks.create(
-            {
-              title: newTitle,
-              category: page.querySelector('#category-input').value,
-              description: page.querySelector('#description-input').value,
-              highlight: page.querySelector('#highlight-input').checked,
-              urgent: page.querySelector('#urgent-input').checked
-            }
-          );
+          nouvelletache = {
+            title: newTitle,
+            category: page.querySelector('#category-input').value,
+            description: page.querySelector('#description-input').value,
+            highlight: page.querySelector('#highlight-input').checked,
+            urgent: page.querySelector('#urgent-input').checked,
+            fini: 0
+          };
+
+          myApp.services.fixtures.push(nouvelletache);
+          localStorage.setItem("taches", JSON.stringify(myApp.services.fixtures));
+
+          myApp.services.tasks.create(nouvelletache);
 
           // Set selected category to 'All', refresh and pop page.
           document.querySelector('#default-category-list ons-list-item ons-radio').checked = true;
@@ -94,9 +99,9 @@ myApp.controllers = {
         // If input title is not empty, ask for confirmation before saving.
         ons.notification.confirm(
           {
-            title: 'Save changes?',
-            message: 'Previous data will be overwritten.',
-            buttonLabels: ['Discard', 'Save']
+            title: 'Save changes ?',
+            message: 'Warning ! Old data will be wiped',
+            buttonLabels: ['Cancel', 'Save']
           }
         ).then(function(buttonIndex) {
           if (buttonIndex === 1) {
@@ -120,7 +125,7 @@ myApp.controllers = {
 
       } else {
         // Show alert if the input title is empty.
-        ons.notification.alert('You must provide a task title.');
+        ons.notification.alert('You must enter a title.');
       }
     };
   }

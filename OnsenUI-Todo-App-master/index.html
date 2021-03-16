@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Onsen UI Memo App 2.0</title>
+  <title>ToDo List - Tabbone Loscot</title>
 
   <script src="lib/onsen/js/onsenui.js"></script>
 
@@ -10,6 +10,9 @@
   <script src="js/services.js"></script>
   <script src="js/controllers.js"></script>
 
+  <script>
+      ons.platform.select('android');
+  </script>
   <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
   <link rel="stylesheet" href="lib/onsen/css/onsen-css-components.css">
   <link rel="stylesheet" href="style.css">
@@ -45,11 +48,11 @@
             <ons-icon icon="ion-navicon, material:md-menu" size="32px, material:24px"></ons-icon>
           </ons-toolbar-button>
         </div>
-        <div class="center">Todos</div>
+        <div class="center">To do :</div>
         <div class="right">
           <!-- Toolbar-button  only visible for iOS/other. -->
           <ons-if platform="ios other">
-            <ons-toolbar-button component="button/new-task">New</ons-toolbar-button>
+            <ons-toolbar-button component="button/new-task">Add</ons-toolbar-button>
           </ons-if>
         </div>
       </ons-toolbar>
@@ -63,9 +66,11 @@
 
       <!-- Auto-positioned Tabbar: top on Android, bottom on iOS/other. -->
       <ons-tabbar id="myTabbar" position="auto">
-        <ons-tab page="html/pending_tasks.html" label="Pending" active>
+        <ons-tab page="html/pending_tasks.html" label="En attentes">
         </ons-tab>
-        <ons-tab page="html/completed_tasks.html" label="Completed">
+        <ons-tab page="html/encours_tasks.html" label="En Cours" active>
+        </ons-tab>
+        <ons-tab page="html/completed_tasks.html" label="Terminées">
         </ons-tab>
       </ons-tabbar>
     </ons-page>
