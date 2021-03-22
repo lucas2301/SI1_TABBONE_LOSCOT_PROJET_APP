@@ -116,10 +116,17 @@ myApp.services = {
     },
 
     removeall: function(){
-      localStorage.setItem("taches", JSON.stringify([]));
-      myApp.services.fixtures.forEach(function(data) {
-          element = {data: data };
-          myApp.services.tasks.remove(element);
+      ons.notification.confirm(
+        {
+          title: 'Delete all tasks ?',
+          message: 'Warning ! All tasks will be deleted forever !',
+          buttonLabels: ['Cancel', 'Delete']
+        }
+      ).then(function(buttonIndex) {
+        if (buttonIndex === 1) {
+          localStorage.setItem("taches", JSON.stringify([]));
+          document.location.reload();
+        }
       });
     },
 

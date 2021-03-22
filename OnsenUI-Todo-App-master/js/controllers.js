@@ -7,6 +7,7 @@ myApp.controllers = {
   //////////////////////////
   // Tabbar Page Controller //
   //////////////////////////
+  
   tabbarPage: function(page) {
     // Set button functionality to open/close the menu.
     page.querySelector('[component="button/menu"]').onclick = function() {
@@ -36,7 +37,7 @@ myApp.controllers = {
 
     // Change splitter animation depending on platform.
     document.querySelector('#mySplitter').left.setAttribute('animation', ons.platform.isAndroid() ? 'overlay' : 'reveal');
-    page.querySelector('[component="button/delall"]').onclick = myApp.services.tasks.removeall();
+    page.querySelector('[component="button/delall"]').onclick = function () {myApp.services.tasks.removeall();};
   },
 
   ////////////////////////////
