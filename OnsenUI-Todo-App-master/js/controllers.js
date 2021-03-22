@@ -7,7 +7,7 @@ myApp.controllers = {
   //////////////////////////
   // Tabbar Page Controller //
   //////////////////////////
-  
+
   tabbarPage: function(page) {
     // Set button functionality to open/close the menu.
     page.querySelector('[component="button/menu"]').onclick = function() {
@@ -44,16 +44,44 @@ myApp.controllers = {
   // New Task Page Controller //
   ////////////////////////////
   newTaskPage: function(page) {
+    // Ajout des categories
+    let categoryChosen = "newCategory";
+    let selectCategory = document.querySelector('#category-select');
+    let strCat = `<option value="newCategory">New Category :</option>`;
+    tabCat = [];
+    myApp.services.fixtures.forEach(function(data) {
+      let categ = data.category;
+        if (! tabCat.includes(categ)){
+          strCat += `
+          <option value="${categ}">${categ}</option>
+          `;
+          tabCat.push(categ);
+        }
+    });
+    selectCategory.innerHTML = strCat;
+    selectCategory.addEventListener('change', function (event) {
+      categoryChosen = event.target.value;
+      if (categoryChosen == "newCategory")
+        document.querySelector('#category-input').disabled = false;
+      else
+        document.querySelector('#category-input').disabled = true;
+    });
+
     // Set button functionality to save a new task.
     Array.prototype.forEach.call(page.querySelectorAll('[component="button/save-task"]'), function(element) {
       element.onclick = function() {
         var newTitle = page.querySelector('#title-input').value;
+        let catadd = '';
+        if (categoryChosen == "newCategory")
+          catadd = document.querySelector('#category-input').value;
+        else
+          catadd = categoryChosen;
 
         if (newTitle) {
           // If input title is not empty, create a new task.
           nouvelletache = {
             title: newTitle,
-            category: page.querySelector('#category-input').value,
+            category: catadd,
             description: page.querySelector('#description-input').value,
             highlight: page.querySelector('#highlight-input').checked,
             urgent: page.querySelector('#urgent-input').checked,

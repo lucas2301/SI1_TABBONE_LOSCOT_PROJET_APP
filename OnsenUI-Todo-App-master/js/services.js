@@ -85,7 +85,11 @@ myApp.services = {
       else
         chooselist = '#completed-list';
       var newlist = document.querySelector(chooselist);
-      newlist.insertBefore(taskItem, taskItem.data.urgent ? newlist.firstChild : null);
+      try {
+        newlist.insertBefore(taskItem, taskItem.data.urgent ? newlist.firstChild : null);
+      } catch (error) { // c'est un reload d'urgence (le querySelector a tendance a planter si le code js prend du temps a s'executer (on sait pas pourquoi))
+        document.location.reload();
+      }
     },
 
     // Modifies the inner data and current view of an existing task.
