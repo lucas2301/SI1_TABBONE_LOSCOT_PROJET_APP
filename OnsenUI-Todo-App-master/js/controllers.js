@@ -77,12 +77,14 @@ myApp.controllers = {
         else
           catadd = categoryChosen;
 
-        if (newTitle) {
+        var date = page.querySelector("#deadline-input").value;
+        if (newTitle && date) {
           // If input title is not empty, create a new task.
           nouvelletache = {
             title: newTitle,
             category: catadd,
             description: page.querySelector('#description-input').value,
+            deadline: date,
             highlight: page.querySelector('#highlight-input').checked,
             urgent: page.querySelector('#urgent-input').checked,
             fini: 0
@@ -100,7 +102,7 @@ myApp.controllers = {
 
         } else {
           // Show alert if the input title is empty.
-          ons.notification.alert('You must provide a task title.');
+          ons.notification.alert((!newTitle) ? 'You must provide a task title.' : 'You must provide a deadline.');
         }
       };
     });
@@ -111,20 +113,41 @@ myApp.controllers = {
   ///////////////////////////////
   detailsTaskPage: function(page) {
     // Get the element passed as argument to pushPage.
+    let categoryChosen = "newCategory";
+    let selectCategory = document.querySelector('#category-select-mod');
+    let strCat = `<option value="newCategory">New Category :</option>`;
+    tabCat = [];
+    myApp.services.fixtures.forEach(function(data) {
+      let categ = data.category;
+        if (! tabCat.includes(categ)){
+          strCat += `
+          <option value="${categ}">${categ}</option>
+          `;
+          tabCat.push(categ);
+        }
+    });
+    selectCategory.innerHTML = strCat;
+    selectCategory.addEventListener('change', function (event) {
+      categoryChosen = event.target.value;
+      if (categoryChosen == "newCategory")
+        document.querySelector('#category-input-mod').disabled = false;
+      else
+        document.querySelector('#category-input-mod').disabled = true;
+    });
     var element = page.data.element;
-
     // Fill the view with the stored data.
     page.querySelector('#title-input').value = element.data.title;
-    page.querySelector('#category-input').value = element.data.category;
+    page.querySelector('#category-input-mod').value = element.data.category;
     page.querySelector('#description-input').value = element.data.description;
+    page.querySelector("#deadline-input").value = element.data.deadline;
     page.querySelector('#highlight-input').checked = element.data.highlight;
     page.querySelector('#urgent-input').checked = element.data.urgent;
 
     // Set button functionality to save an existing task.
     page.querySelector('[component="button/save-task"]').onclick = function() {
       var newTitle = page.querySelector('#title-input').value;
-
-      if (newTitle) {
+      var date = page.querySelector('#deadline-input').value;
+      if (newTitle && date) {
         // If input title is not empty, ask for confirmation before saving.
         ons.notification.confirm(
           {
@@ -133,15 +156,24 @@ myApp.controllers = {
             buttonLabels: ['Cancel', 'Save']
           }
         ).then(function(buttonIndex) {
+
           if (buttonIndex === 1) {
             // If 'Save' button was pressed, overwrite the task.
+            let catadd = '';
+            if (categoryChosen == "newCategory")
+              catadd = document.querySelector('#category-input-mod').value;
+            else
+              catadd = categoryChosen;
+
             myApp.services.tasks.update(element,
               {
                 title: newTitle,
-                category: page.querySelector('#category-input').value,
+                category: catadd,
                 description: page.querySelector('#description-input').value,
                 ugent: element.data.urgent,
-                highlight: page.querySelector('#highlight-input').checked
+                deadline: date,
+                highlight: page.querySelector('#highlight-input').checked,
+                fini: element.data.fini
               }
             );
 
@@ -154,7 +186,7 @@ myApp.controllers = {
 
       } else {
         // Show alert if the input title is empty.
-        ons.notification.alert('You must enter a title.');
+        ons.notification.alert((!newTitle) ? 'You must provide a task title.' : 'You must provide a deadline.');
       }
     };
   }

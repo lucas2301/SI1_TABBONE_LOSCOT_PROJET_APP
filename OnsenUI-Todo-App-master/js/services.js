@@ -113,7 +113,6 @@ myApp.services = {
       taskItem.classList[data.highlight ? 'add' : 'remove']('highlight');
 
       // Store the new data within the element.
-      console.log("test");
       updtache = myApp.services.fixtures.findIndex(element => element == taskItem.data);
       myApp.services.fixtures[updtache] = data;
       localStorage.setItem("taches", JSON.stringify(myApp.services.fixtures));
