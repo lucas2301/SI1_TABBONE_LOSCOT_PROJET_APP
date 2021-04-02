@@ -17,13 +17,13 @@ ons-splitter-side[side="left"][animation="overlay"] {
 
 .highlight {
   background-color: lightyellow;
-  color: rgba(255, 0, 0, 0.7);
+  color:  #20777f ;
 }
 
 .left-label {
   width: 30%;
   font-size: 16px;
-  color: #666
+  color:  #20777;
 }
 
 
